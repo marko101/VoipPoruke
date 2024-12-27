@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="0dp">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:lottie_url="https://lottie.host/553df60d-4abe-47cb-a1ec-cc599f4d37bc/ZY7BGFrDSm.lottie"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+
+    <TextView
+        android:id="@+id/imageExplanation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="ДРВО"
+        android:textSize="24sp"
+        android:textColor="#FFFF00"
+        android:layout_marginTop="16dp"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieTree"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_below="@id/imageExplanation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_fileName="drvo.lottie" />
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lottieTree"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <!-- Play Button and Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/playButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_fileName="playTaster.lottie" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slušaj"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+        <!-- Record Button and Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/recButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_fileName="recTaster.lottie" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Snimaj"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+        <!-- Listen Button and Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/listenButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_fileName="listenButton.lottie" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proveri"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+        <!-- Speak Button and Label -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/govorButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_fileName="govorTaster.lottie" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Govori"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_below="@id/buttonsLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Rezultat će se pojaviti ovde"/>
+</RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="0dp">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:lottie_url="https://lottie.host/553df60d-4abe-47cb-a1ec-cc599f4d37bc/ZY7BGFrDSm.lottie"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+
+    <Button
+        android:id="@+id/btnStartGovorActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pokreni Govor"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
