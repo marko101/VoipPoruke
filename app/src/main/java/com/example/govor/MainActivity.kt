@@ -17,5 +17,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, GovorActivity::class.java)
             startActivity(intent)
         }
+
+        val btnOpenLettersActivity: Button = findViewById(R.id.btnOpenLettersActivity)
+        btnOpenLettersActivity.setOnClickListener {
+            val intent = Intent(this, LettersActivity::class.java)
+            startActivity(intent)
+        }
     }
+
 }
