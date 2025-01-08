@@ -1,21 +1,10 @@
 package com.example.govor
 
-import android.content.Intent
 import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.lottie.LottieAnimationView
-import com.airbnb.lottie.LottieDrawable
-import android.media.MediaPlayer
-import android.media.MediaRecorder
-import android.os.Handler
-import android.view.View
 import android.widget.Button
 import android.widget.GridView
-import java.io.File
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 
 class LettersActivity : AppCompatActivity() {

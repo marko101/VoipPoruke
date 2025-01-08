@@ -11,17 +11,20 @@ import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Handler
-import android.view.View
 import java.io.File
-
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 
 
 class GovorActivity : AppCompatActivity() {
 
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var textViewResult: TextView
-    private lateinit var mediaPlayer: MediaPlayer
+    private var mediaPlayer: MediaPlayer? = null
     private var mediaRecorder: MediaRecorder? = null
     private var audioPath: String? = null
     private var isRecording = false
@@ -30,15 +33,20 @@ class GovorActivity : AppCompatActivity() {
     private lateinit var playButton: LottieAnimationView
     private lateinit var recButton: LottieAnimationView
     private lateinit var listenButton: LottieAnimationView
+    private lateinit var viewPager: ViewPager2
+    private var currentAudioResource: Int? = null // Čuvanje trenutnog audio resursa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_govor)
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.drvo) // For playButton
+
         initializeUI()
+        setupViewPager()
         setupButtonListeners()
         initializeSpeechRecognizer()
+
+
     }
 
     private fun initializeUI() {
@@ -47,9 +55,6 @@ class GovorActivity : AppCompatActivity() {
         lottieBackground.playAnimation()
         lottieBackground.repeatCount = LottieDrawable.INFINITE
 
-        val lottieTree: LottieAnimationView = findViewById(R.id.lottieTree)
-        lottieTree.setAnimation("drvo.lottie")
-        lottieTree.playAnimation()
 
         govoriButton = findViewById(R.id.govorButton)
         playButton = findViewById(R.id.playButton)
@@ -57,17 +62,13 @@ class GovorActivity : AppCompatActivity() {
         listenButton = findViewById(R.id.listenButton)
         textViewResult = findViewById(R.id.textViewResult)
 
+        viewPager = findViewById(R.id.viewPager)
+
     }
 
     private fun setupButtonListeners() {
         playButton.setOnClickListener {
-            playButton.playAnimation()
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.pause()  // Pause the playback
-                mediaPlayer.seekTo(0)  // Reset the playback to the start
-            } else {
-                mediaPlayer.start()  // Start the playback
-            }
+            playCurrentAudio()
         }
 
         govoriButton.setOnClickListener {
@@ -92,7 +93,7 @@ class GovorActivity : AppCompatActivity() {
                 Handler(mainLooper).postDelayed({
                     listenButton.isEnabled = true
 
-                }, 4800)  // Odlaganje od 4.8 sekunde
+                }, 4900)  // Odlaganje od 4.8 sekunde
             }
         }
 
@@ -101,6 +102,18 @@ class GovorActivity : AppCompatActivity() {
                 listenButton.playAnimation()
                 playRecordedAudio()
             }
+        }
+    }
+
+    private fun playCurrentAudio() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer()
+        }
+        mediaPlayer?.let {
+            it.reset()
+            it.setDataSource(this, Uri.parse("android.resource://$packageName/${currentAudioResource}"))
+            it.prepare()
+            it.start()
         }
     }
 
@@ -137,6 +150,20 @@ class GovorActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupViewPager() {
+        val animations = listOf(
+            AnimationData("animation1.lottie", R.raw.sound1, "Opis za animaciju 1"),
+            AnimationData("animation2.lottie", R.raw.sound2, "Opis za animaciju 2")
+        )
+        viewPager.adapter = AnimationPagerAdapter(this, animations)
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                currentAudioResource = animations[position].audioFile // Ažuriranje trenutnog audio resursa
+            }
+        })
+    }
+
 
 
     private fun initializeSpeechRecognizer() {
@@ -171,11 +198,26 @@ class GovorActivity : AppCompatActivity() {
         speechRecognizer.startListening(intent)
     }
 
+    private inner class AnimationPagerAdapter(fa: FragmentActivity, private val animations: List<AnimationData>) : FragmentStateAdapter(fa) {
+        override fun getItemCount(): Int = animations.size
+
+        override fun createFragment(position: Int): Fragment {
+            // Uzima trenutnu AnimationData stavku iz liste na osnovu pozicije
+            val animationData = animations[position]
+            // Prosleđuje sve potrebne podatke newInstance metodi
+            return AnimationFragment.newInstance(animationData.animationFile, animationData.audioFile, animationData.description)
+        }
+    }
+
+    data class AnimationData(val animationFile: String, val audioFile: Int, val description: String)
+
 
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayer?.release()
+        mediaPlayer = null
+
         mediaRecorder?.release()
         speechRecognizer.destroy()
         audioPath?.let { File(it).delete() }

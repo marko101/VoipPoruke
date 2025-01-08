@@ -8,12 +8,13 @@
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="2"
-        android:verticalSpacing="10dp"
+        android:layout_above="@+id/descriptionText"
+        android:layout_marginBottom="-16dp"
         android:horizontalSpacing="10dp"
+        android:numColumns="2"
         android:padding="10dp"
         android:scrollbars="vertical"
-        android:layout_above="@+id/descriptionText"/>
+        android:verticalSpacing="10dp" />
 
     <TextView
         android:id="@+id/descriptionText"
