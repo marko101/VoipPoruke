@@ -13,6 +13,7 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Handler
+import android.util.Log
 import java.io.File
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -35,6 +36,7 @@ class GovorActivity : AppCompatActivity() {
     private lateinit var listenButton: LottieAnimationView
     private lateinit var viewPager: ViewPager2
     private var currentAudioResource: Int? = null // Čuvanje trenutnog audio resursa
+    private var currentSoundEffectResource: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,14 +154,33 @@ class GovorActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         val animations = listOf(
-            AnimationData("animation1.lottie", R.raw.sound1, "Opis za animaciju 1"),
-            AnimationData("animation2.lottie", R.raw.sound2, "Opis za animaciju 2")
+            AnimationData("cat.lottie", R.raw.sound1, "Mačka", R.raw.cat),
+            AnimationData("drvo.lottie", R.raw.sound2, "Drvo", R.raw.dog),
+            AnimationData("fish.lottie", R.raw.sound2, "Riba", R.raw.fish),
+
         )
+
         viewPager.adapter = AnimationPagerAdapter(this, animations)
+
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                currentAudioResource = animations[position].audioFile // Ažuriranje trenutnog audio resursa
+
+                // Ažurirajte trenutne resurse
+                currentAudioResource = animations[position].audioFile
+                currentSoundEffectResource = animations[position].soundEffectFile
+
+                // Proverite resurse
+                Log.d("ResourceCheck", "Audio Resource ID: $currentAudioResource")
+                Log.d("ResourceCheck", "Sound Effect Resource ID: $currentSoundEffectResource")
+
+                // Provera validnosti resursa
+                if (currentAudioResource == 0) {
+                    Log.e("ResourceError", "Invalid audio resource for position: $position")
+                }
+                if (currentSoundEffectResource == 0) {
+                    Log.e("ResourceError", "Invalid sound effect resource for position: $position")
+                }
             }
         })
     }
@@ -205,11 +226,16 @@ class GovorActivity : AppCompatActivity() {
             // Uzima trenutnu AnimationData stavku iz liste na osnovu pozicije
             val animationData = animations[position]
             // Prosleđuje sve potrebne podatke newInstance metodi
-            return AnimationFragment.newInstance(animationData.animationFile, animationData.audioFile, animationData.description)
+            return AnimationFragment.newInstance(
+                animationData.animationFile,
+                animationData.audioFile,
+                animationData.description,
+                animationData.soundEffectFile // Dodajte zvučni efekat
+            )
         }
     }
 
-    data class AnimationData(val animationFile: String, val audioFile: Int, val description: String)
+
 
 
 

@@ -13,6 +13,7 @@ import com.airbnb.lottie.LottieDrawable
 class AnimationFragment : Fragment() {
     private lateinit var lottieAnimationView: LottieAnimationView
     private var mediaPlayer: MediaPlayer? = null
+    private var soundEffectPlayer: MediaPlayer? = null  // Inicijalizacija MediaPlayer-a na nivou klase
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_animation, container, false)
@@ -21,7 +22,9 @@ class AnimationFragment : Fragment() {
 
         val animationFile = arguments?.getString("animationFile") ?: ""
         val audioFile = arguments?.getInt("audioFile") ?: 0
+        val soundEffectFile = arguments?.getInt("soundEffectFile") ?: 0
         val description = arguments?.getString("description") ?: ""
+
 
         descriptionTextView.text = description
 
@@ -31,33 +34,55 @@ class AnimationFragment : Fragment() {
         lottieAnimationView.repeatCount = LottieDrawable.INFINITE
         lottieAnimationView.pauseAnimation()
 
-        var isAnimating = false
+        val voicePlayer = MediaPlayer.create(context, audioFile)
+        soundEffectPlayer = MediaPlayer.create(context, soundEffectFile)  // Inicijalizacija soundEffectPlayer-a
+        soundEffectPlayer?.isLooping = true  // Podesavanje na ponavljanje
 
-        lottieAnimationView.setOnClickListener {
-            if (isAnimating) {
-                lottieAnimationView.pauseAnimation()
-                isAnimating = false
-            } else {
-                lottieAnimationView.playAnimation()
-                isAnimating = true
-            }
-        }
+
+
+        var isAnimating = false
 
         // Priprema MediaPlayer-a za reprodukciju zvuka
         if (audioFile != 0) {
             mediaPlayer = MediaPlayer.create(context, audioFile)
         }
 
+        if (soundEffectFile != 0) {
+            soundEffectPlayer = MediaPlayer.create(context, soundEffectFile)
+        }
+
+        lottieAnimationView.setOnClickListener {
+            if (isAnimating) {
+                // Pauziranje animacije i oba audio playera
+                lottieAnimationView.pauseAnimation()
+                soundEffectPlayer?.pause()
+
+                isAnimating = false
+            } else {
+                // Pokretanje animacije i oba audio playera
+                lottieAnimationView.playAnimation()
+                soundEffectPlayer?.start()
+
+                isAnimating = true
+            }
+        }
+
+
+
         return view
     }
 
+
+
     companion object {
-        fun newInstance(animationFile: String, audioFile: Int, description: String): AnimationFragment {
+        fun newInstance(animationFile: String, audioFile: Int, description: String, soundEffectFile: Int): AnimationFragment {
             val fragment = AnimationFragment()
-            val args = Bundle()
-            args.putString("animationFile", animationFile)
-            args.putInt("audioFile", audioFile)
-            args.putString("description", description)
+            val args = Bundle().apply {
+                putString("animationFile", animationFile)
+                putInt("audioFile", audioFile)
+                putString("description", description)
+                putInt("soundEffectFile", soundEffectFile) // Dodajte sound effect file
+            }
             fragment.arguments = args
             return fragment
         }
@@ -68,5 +93,8 @@ class AnimationFragment : Fragment() {
         // Oslobađanje MediaPlayer resursa
         mediaPlayer?.release()
         mediaPlayer = null
+        soundEffectPlayer?.release()
+        soundEffectPlayer = null
+
     }
 }
